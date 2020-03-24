@@ -1,0 +1,41 @@
+  kind: Deployment
+  apiVersion: v1
+  metadata:
+    labels:
+      app: test-reverse-proxy
+    name: test-reverse-proxy
+  spec:
+    replicas: 1
+    selector:
+      app: test-reverse-proxy
+    dnsConfig:
+      nameservers:
+      - 8.8.8.8
+      options:
+        - name: ndots
+          value: "2"
+    template:
+      metadata:
+        labels:
+          app: test-reverse-proxy
+      spec:
+        containers:
+        - env:
+            - name: TZ
+              value: Europe/Berlin
+          image: ubuntu
+          command:
+                - sleep
+                - "3600"
+          imagePullPolicy: Always
+          name: ubuntu
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "200m"
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
